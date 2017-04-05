@@ -1,11 +1,23 @@
 ISWIN = $(or $(findstring Windows,$(OS)),$(findstring mingw,$(CROSS_COMPILE)))
+
 CC = $(CROSS_COMPILE)g++
 LD = $(CROSS_COMPILE)ld
 STRIP = $(CROSS_COMPILE)strip
 CXXFLAGS+= -DUSE_REUSABLES $(if $(ISWIN),,-DUNIXVER) -DUSE_BUILTIN_FCREATE
 LDFLAGS+= -lm
 
+ifdef MINGW_COMPILE
+CXXFLAGS+= -DMINGWVER
+NO_APPSIGN= Yes
+endif
+
 DESTDIR ?= /usr/local
+
+ifeq ($(OS),Windows_NT)
+RM= del /f 2>nul
+else
+RM= rm -f
+endif
 
 ifdef FORCE_NO_GIT
 	FORCE_NO_GIT = 1
@@ -78,7 +90,7 @@ debian: opt $(EXE)
 			--maintainer="alberthdev@users.noreply.github.com" \
 			--backup=no --deldoc=yes --deldesc=yes --delspec=yes \
 			--install=no --default
-		rm -f description-pak
+		$(RM) description-pak
 
 install:
 		cp $(EXE) $(DESTDIR)/bin/$(EXE)
@@ -91,9 +103,9 @@ coverage: LDFLAGS+=-g -O0 --coverage
 coverage: clean check
 
 clean:
-		rm -f $(OBJ) $(EXE) description-pak spasm-ng*.deb spasm-ng*.tar.gz
-		rm -f opt static prep-special-build
-		rm -f *.gcno *.gcda *.gcov
+		$(RM) $(OBJ) $(EXE) description-pak spasm-ng*.deb spasm-ng*.tar.gz
+		$(RM) opt static prep-special-build
+		$(RM) *.gcno *.gcda *.gcov
 
 version:
 		@./version.sh set

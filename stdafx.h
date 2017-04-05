@@ -160,5 +160,9 @@ typedef void *LPVOID;
 #define ARRAYSIZE(z) (sizeof(z)/sizeof((z)[0]))
 #endif
 
+#ifdef MINGWVER
+#define ARRAYSIZE(z) (sizeof(z)/sizeof((z)[0]))
+#endif
+
 #endif
 #endif
