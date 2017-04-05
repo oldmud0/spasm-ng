@@ -31,7 +31,7 @@ typedef enum {
 	EXIT_FATAL_ERROR = 3
 } EXIT_STATUS;
 
-#ifdef WIN32
+#ifdef _WINDOWS
 #include <windows.h>
 #define NEWLINE "\r\n"
 #define PATH_SEPARATOR '\\'
@@ -59,9 +59,11 @@ typedef int BOOL;
 const static unsigned int output_buf_size = 8000000;	//size of output buffer for assembled code
 
 //make sure that MAX_PATH is max path length on *nix and Windows
-#if !defined(MAX_PATH) || defined(UNIX_VER)
+#if !defined(MAX_PATH) || defined(UNIXVER) || defined(MINGWVER)
 	#include <limits.h>
-	#define MAX_PATH PATH_MAX
+	#ifndef MINGWVER
+		#define MAX_PATH PATH_MAX
+	#endif
 #endif
 
 GLOBAL unsigned int mode;

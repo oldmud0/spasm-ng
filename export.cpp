@@ -326,6 +326,7 @@ void makeapp (const unsigned char *output_contents, DWORD size, FILE *outfile, c
 	intelhex(outfile, buffer, total_size);
 
 #ifdef WIN32
+#ifndef NO_APPSIGN
 	if (hCryptHash) {
 		CryptDestroyHash(hCryptHash);
 		hCryptHash = NULL;
@@ -335,6 +336,8 @@ void makeapp (const unsigned char *output_contents, DWORD size, FILE *outfile, c
 		hCryptProv = NULL;
 	}
 #endif
+#endif
+
 	free(buffer);
 //    if (pages==1) printf("%s (%d page",filename,pages);
 //    else printf("%s (%d pages",filename,pages);
